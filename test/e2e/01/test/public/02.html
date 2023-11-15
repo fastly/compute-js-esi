@@ -1,0 +1,12 @@
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <!--
+        The include below should fail on the src, and serve the alt instead.
+    -->
+    <esi:include src="/templates/header-missing.html" alt="/templates/header.html" />
+    <div>BODY</div>
+    <!--
+        The include below should fail for both the src and alt, but the failure should be silent
+        due to the onerror="continue"
+    -->
+    <esi:include src="/templates/footer-missing.html" alt="/templates/footer-missing-2.html" onerror="continue"/>
+</div>

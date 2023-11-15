@@ -1,0 +1,18 @@
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <div>
+        <esi:try>
+            <esi:attempt>
+                <div>
+                    This request was for $(HTTP_HOST)!
+                </div>
+                <esi:include src="/templates/$(HTTP_COOKIE{foo}).html" />
+            </esi:attempt>
+            <esi:except>
+                This exception handler is for when the include fails.
+            </esi:except>
+        </esi:try>
+    </div>
+    <esi:vars>
+        <img src="/images/$(QUERY_STRING{img})" alt="$(QUERY_STRING{alt})" />
+    </esi:vars>
+</div>

@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
     "module": "nodenext",
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "strict": true
   },
   "include": [
     "src/**/*.ts",

@@ -1,0 +1,52 @@
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <div>
+        <esi:try>
+            <esi:attempt>
+                <esi:include src="/templates/fail.html" />
+                This include (1) should fail, and thus this text won't be in the resulting stream.
+            </esi:attempt>
+            <esi:except>
+                This exception handler (1) should end up in the resulting stream.
+            </esi:except>
+        </esi:try>
+    </div>
+
+    <div>
+        <esi:try>
+            <esi:attempt>
+                <esi:include src="/templates/fail.html" onerror="continue" />
+                The onerror="continue" will swallow the error here.
+                This text (2) will appear in the resulting stream.
+            </esi:attempt>
+            <esi:except>
+                This exception handler (2) won't end up in the resulting stream.
+            </esi:except>
+        </esi:try>
+    </div>
+
+    <div>
+        <esi:try>
+            <esi:attempt>
+
+                <div>
+                    esi:try can be nested.
+                </div>
+
+                <esi:try>
+                    <esi:attempt>
+                        <esi:include src="/templates/fail.html" />
+                        This include should fail, and thus this text (3a) won't be in the resulting stream.
+                    </esi:attempt>
+                    <esi:except>
+                        This exception handler (3a) will end up in the resulting stream.
+                    </esi:except>
+                </esi:try>
+
+            </esi:attempt>
+            <esi:except>
+                This exception handler (3b) won't end up in the resulting stream.
+            </esi:except>
+        </esi:try>
+    </div>
+
+</div>

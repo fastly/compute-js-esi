@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@fastly/esi": "file:../../../..",
+    "@fastly/js-compute": "^3.7.0"
+  },
+  "scripts": {
+    "build": "js-compute-runtime ./src/index.js ./bin/main.wasm",
+    "deploy": "fastly compute publish"
+  }
+}

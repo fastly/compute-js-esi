@@ -1,0 +1,58 @@
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <div>
+        <esi:choose>
+            <esi:when test="$(QUERY_STRING{foo})=='1'">
+                <div>
+                    a partridge in a pear tree
+                </div>
+            </esi:when>
+            <esi:when test="$(QUERY_STRING{foo})=='2'">
+                <div>
+                    two turtle doves
+                </div>
+            </esi:when>
+            <esi:otherwise>
+                <div>
+                    something else
+                </div>
+            </esi:otherwise>
+        </esi:choose>
+    </div>
+    <div>
+        <div>Nesting, of course</div>
+        <esi:choose>
+            <esi:when test="$(QUERY_STRING{brightness})>=60">
+                <div>
+                    very bright
+                </div>
+                <esi:choose>
+                    <esi:when test="$(HTTP_ACCEPT_LANGUAGE{fr})">
+                        <div>
+                            francais
+                        </div>
+                    </esi:when>
+                    <esi:when test="$(HTTP_ACCEPT_LANGUAGE{en})">
+                        <div>
+                            English
+                        </div>
+                    </esi:when>
+                    <esi:otherwise>
+                        <div>
+                            something more mysterious
+                        </div>
+                    </esi:otherwise>
+                </esi:choose>
+            </esi:when>
+            <esi:when test="$(QUERY_STRING{brightness})>=30">
+                <div>
+                    kinda bright
+                </div>
+            </esi:when>
+            <esi:otherwise>
+                <div>
+                    dark
+                </div>
+            </esi:otherwise>
+        </esi:choose>
+    </div>
+</div>

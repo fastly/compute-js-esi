@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "@fastly/compute-testing": "^0.1.2",
+    "http-server": "^14.1.1",
+    "tree-kill": "^1.2.2"
+  },
+  "scripts": {
+    "start": "http-server"
+  }
+}

@@ -1,0 +1,14 @@
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <esi:include src="/templates/header.html" />
+    <div>BODY</div>
+    <esi:comment text="This is a comment and should not be in the resulting stream" />
+    <esi:remove>
+        This text should not end up in the resulting stream either.
+    </esi:remove>
+    <!--esi
+    <div>
+        This is inside an ESI comment. The processor should remove the opening and closing ESI comment tags,
+        and as a result, this text should be in the resulting stream.
+    </div>
+    -->
+</div>

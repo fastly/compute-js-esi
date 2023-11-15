@@ -5,12 +5,26 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
+    "prepack": "npm run build",
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf build",
-    "test": "node --test --no-warnings=ExperimentalWarning --loader ts-node/esm test/**/*.test.ts"
+    "coverage": "c8 npm test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test --no-warnings=ExperimentalWarning --loader ts-node/esm test/unit/**/*.test.ts",
+    "test:e2e": "cd test/e2e/01 && ./test.sh"
   },
   "devDependencies": {
+    "@fastly/js-compute": "^3.7.3",
+    "c8": "^8.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
-  }
+  },
+  "files": [
+    "build/**/*.js",
+    "build/**/*.js.map",
+    "build/**/*.d.ts",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md"
+  ]
 }
