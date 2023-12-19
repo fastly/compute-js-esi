@@ -1,6 +1,15 @@
 {
   "name": "@fastly/esi",
+  "description": "ESI implementation for JavaScript, using the modern fetch and streaming APIs.",
   "version": "0.1.0-beta.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastly/compute-js-esi.git"
+  },
+  "author": {
+    "name": "Katsuyuki Omuro",
+    "email": "komuro@fastly.com"
+  },
   "type": "module",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -26,5 +35,13 @@
     "LICENSE",
     "README.md",
     "SECURITY.md"
+  ],
+  "keywords": [
+    "esi",
+    "fetch",
+    "transformstream",
+    "streams",
+    "fastly",
+    "compute"
   ]
 }
