@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.2] - 2024-01-16
+
+### Fixed
+
+- Fixed regex for literal string to allow for empty string
+
 ## [0.1.1] - 2024-01-16
 
 ### Fixed

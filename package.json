@@ -1,7 +1,7 @@
 {
   "name": "@fastly/esi",
   "description": "ESI implementation for JavaScript, using the modern fetch and streaming APIs.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fastly/compute-js-esi.git"
