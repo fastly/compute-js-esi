@@ -257,7 +257,7 @@ export class EsiExpressionEvaluator extends ExpressionEvaluatorBase<EsiExpressio
 
   static LEXER_TOKEN_DEFS: LexerTokenDefs = {
     whitespace:     /^\s+/,
-    literalString:  /^'.*?[^\\]'/,
+    literalString:  /^'(\\'|[^'])*?'/,
     literalNumber:  /^(\d+|(\d*\.\d+))/,
     literalBoolean: /^(true|false)/,
     operator:       /^(\(|\)|==|!=|>=|<=|>|<|!|&|\|)/,

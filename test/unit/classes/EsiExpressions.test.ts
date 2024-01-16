@@ -217,6 +217,15 @@ describe('StringLexer', () => {
       ]);
     });
 
+    it('test case 7', () => {
+      const tokens = stringLexer.tokenize("''==''");
+      const tokensFlat = stripWhitespaceAndFlatten(tokens);
+
+      assert.deepStrictEqual(tokensFlat, [
+        "''", '==', "''"
+      ]);
+    });
+
   });
 
 });
@@ -375,6 +384,17 @@ describe('ExpressionParser', () => {
         '$(HTTP_COOKIE{group})', "'Advanced'", '=='
       ]);
     });
+
+    it('test case 7', () => {
+      const tokens = [
+        "''", '==', "''"
+      ];
+
+      const parsedTokens = evaluator.evaluateTokens(tokens);
+      assert.deepStrictEqual(parsedTokens, [
+        "''", "''", '=='
+      ]);
+    });
   });
 });
 
@@ -487,6 +507,15 @@ describe('EsiExpressionEvaluator', () => {
         { type: 'string', value: 'standard' },
         { type: 'operator', value: '==' },
         { type: 'string', value: 'Advanced' },
+      ]);
+    });
+
+    it('test case 7', () => {
+      const parsedTokens = evaluator.tokenize("''==''");
+      assert.deepStrictEqual(parsedTokens, [
+        { type: 'string', value: '' },
+        { type: 'operator', value: '==' },
+        { type: 'string', value: '' },
       ]);
     });
 
@@ -611,6 +640,18 @@ describe('EsiExpressionEvaluator', () => {
       assert.strictEqual(evaluated[0].value, false);
     });
 
+    it('test case 7', () => {
+      const parsedTokens: EsiExpressionValue[] = [
+        { type: 'string', value: '' },
+        { type: 'operator', value: '==' },
+        { type: 'string', value: '' },
+      ];
+      const evaluated = evaluator.evaluateTokens(parsedTokens);
+      assert.strictEqual(evaluated.length, 1);
+      assert.strictEqual(evaluated[0].type, 'boolean');
+      assert.strictEqual(evaluated[0].value, true);
+    });
+
   });
 
   describe('Evaluation of String Expressions', () => {
@@ -648,6 +689,11 @@ describe('EsiExpressionEvaluator', () => {
     it('test case 6', () => {
       const result = evaluator.evaluate("$(HTTP_COOKIE{group})=='Advanced'")
       assert.strictEqual(result, false);
+    });
+
+    it('test case 7', () => {
+      const result = evaluator.evaluate("''==''")
+      assert.strictEqual(result, true);
     });
   });
 });
