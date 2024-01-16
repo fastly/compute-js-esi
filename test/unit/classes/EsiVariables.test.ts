@@ -159,7 +159,7 @@ describe('EsiCookieVariable', () => {
     const val = new EsiCookieVariable('id=571; visits=42');
     assert.strictEqual(val.getSubValue('id'), "'571'");
     assert.strictEqual(val.getSubValue('visits'), "'42'");
-    assert.strictEqual(val.getSubValue('ja'), undefined);
+    assert.strictEqual(val.getSubValue('ja'), "''");
 
   });
 
@@ -180,7 +180,7 @@ describe('EsiQueryStringVariable', () => {
     const val = new EsiQueryStringVariable('first=Robin&last=Roberts');
     assert.strictEqual(val.getSubValue('first'), "'Robin'");
     assert.strictEqual(val.getSubValue('last'), "'Roberts'");
-    assert.strictEqual(val.getSubValue('ja'), undefined);
+    assert.strictEqual(val.getSubValue('ja'), "''");
 
   });
 
@@ -199,7 +199,7 @@ describe('EsiUserAgentVariable', () => {
     it('Unknown', () => {
       const val = new EsiUserAgentVariable('None');
       assert.strictEqual(val.getSubValue('browser'), "'OTHER'");
-      assert.strictEqual(val.getSubValue('version'), undefined);
+      assert.strictEqual(val.getSubValue('version'), "''");
       assert.strictEqual(val.getSubValue('os'), "'OTHER'");
     });
 
@@ -277,6 +277,16 @@ describe('EsiVariables', () => {
 
   });
 
+  it('Empty headers gives \'empty\' AcceptLanguageVariable that returns false for all languages', () => {
+
+    const vars = new EsiVariables();
+    assert.strictEqual(vars.getValue('HTTP_ACCEPT_LANGUAGE'), "''");
+    assert.strictEqual(vars.getValue('HTTP_ACCEPT_LANGUAGE', 'fr-CH'), "false");
+    assert.strictEqual(vars.getValue('HTTP_ACCEPT_LANGUAGE', 'en'), "false");
+    assert.strictEqual(vars.getValue('HTTP_ACCEPT_LANGUAGE', 'ja'), "false");
+
+  });
+
   it('Constructs with Accept-Language header', () => {
 
     const headers = new Headers({
@@ -290,6 +300,16 @@ describe('EsiVariables', () => {
 
   });
 
+  it('Empty headers gives \'empty\' Cookie that returns \'\' for all keys', () => {
+
+    const vars = new EsiVariables();
+    assert.strictEqual(vars.getValue('HTTP_COOKIE'), "''");
+    assert.strictEqual(vars.getValue('HTTP_COOKIE', 'id'), "''");
+    assert.strictEqual(vars.getValue('HTTP_COOKIE', 'visits'), "''");
+    assert.strictEqual(vars.getValue('HTTP_COOKIE', 'ja'), "''");
+
+  });
+
   it('Constructs with Cookie header', () => {
 
     const headers = new Headers({
@@ -299,7 +319,7 @@ describe('EsiVariables', () => {
     assert.strictEqual(vars.getValue('HTTP_COOKIE'), "'id=571; visits=42'");
     assert.strictEqual(vars.getValue('HTTP_COOKIE', 'id'), "'571'");
     assert.strictEqual(vars.getValue('HTTP_COOKIE', 'visits'), "'42'");
-    assert.strictEqual(vars.getValue('HTTP_COOKIE', 'ja'), undefined);
+    assert.strictEqual(vars.getValue('HTTP_COOKIE', 'ja'), "''");
 
   });
 

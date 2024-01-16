@@ -72,10 +72,7 @@ export class EsiDictionaryVariable implements IEsiVariable {
     if (this.map === undefined) {
       this.map = this.fn(this.value);
     }
-    const value = this.map[key];
-    if (value == null) {
-      return undefined;
-    }
+    const value = this.map[key] ?? '';
     return quoteString(value);
   }
 
@@ -198,15 +195,11 @@ export class EsiVariables implements IEsiVariables {
 
   constructor(url?: URL, headers?: Headers) {
 
-    const httpAcceptLanguageValue = headers?.get('accept-language');
-    if (httpAcceptLanguageValue != null) {
-      this.values['HTTP_ACCEPT_LANGUAGE'] = new EsiAcceptLanguageVariable(httpAcceptLanguageValue);
-    }
+    const httpAcceptLanguageValue = headers?.get('accept-language') ?? '';
+    this.values['HTTP_ACCEPT_LANGUAGE'] = new EsiAcceptLanguageVariable(httpAcceptLanguageValue);
 
-    const httpCookieValue = headers?.get('cookie');
-    if (httpCookieValue != null) {
-      this.values['HTTP_COOKIE'] = new EsiCookieVariable(httpCookieValue);
-    }
+    const httpCookieValue = headers?.get('cookie') ?? '';
+    this.values['HTTP_COOKIE'] = new EsiCookieVariable(httpCookieValue);
 
     const httpHostValue = headers?.get('host');
     if (httpHostValue != null) {
