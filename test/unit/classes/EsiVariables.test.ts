@@ -358,12 +358,13 @@ describe('EsiVariables', () => {
 
   it('Constructs with query parameters', () => {
 
-    const url = new URL('http://www.example.com/foo?bar=baz&hoge=piyo');
+    const url = new URL('http://www.example.com/foo?bar=baz&hoge=piyo&_hi=/ho');
     const vars = new EsiVariables(url);
 
-    assert.strictEqual(vars.getValue('QUERY_STRING'), "'bar=baz&hoge=piyo'");
+    assert.strictEqual(vars.getValue('QUERY_STRING'), "'bar=baz&hoge=piyo&_hi=/ho'");
     assert.strictEqual(vars.getValue('QUERY_STRING', 'bar'), "'baz'");
     assert.strictEqual(vars.getValue('QUERY_STRING', 'hoge'), "'piyo'");
+    assert.strictEqual(vars.getValue('QUERY_STRING', '_hi'), "'/ho'");
 
   });
 
