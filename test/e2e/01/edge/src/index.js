@@ -14,7 +14,6 @@ async function handleRequest(event) {
   const req = event.request;
 
   const headers = new Headers(req.headers);
-  headers.set('host', 'localhost:8080');
 
   const beresp = await fetch(req.url, {
     headers,

@@ -13,6 +13,7 @@ service_id = ""
 [local_server.backends]
 [local_server.backends.origin_0]
 url = "http://localhost:8080/"
+override_host = "localhost:8080"
 
 [scripts]
   build = "npm run build"

@@ -22,7 +22,6 @@ async function handleRequest(event) {
   // Perform a backend request
   const url = new URL(req.url);
   const headers = new Headers(req.headers);
-  headers.set('host', 'mydomain.com');
 
   const beresp = await fetch(url, {
     headers,
