@@ -25,6 +25,12 @@ import { applyEsiVariables, IEsiVariables } from "./EsiVariables.js";
 import {EsiExpressionEvaluator} from "./EsiExpressions.js";
 
 export class EsiError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class EsiElementError extends EsiError {
   el: XmlElement;
   constructor(el: XmlElement, message: string) {
     super(message);
@@ -32,13 +38,13 @@ export class EsiError extends Error {
   }
 }
 
-export class EsiIncludeError extends EsiError {
+export class EsiIncludeError extends EsiElementError {
   constructor(el: XmlElement, message: string) {
     super(el, message);
   }
 }
 
-export class EsiStructureError extends EsiError {
+export class EsiStructureError extends EsiElementError {
   constructor(el: XmlElement, message: string) {
     super(el, message);
   }
