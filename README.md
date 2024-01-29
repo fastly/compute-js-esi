@@ -215,7 +215,7 @@ foo<esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0"/>baz
 or
 ```html
 <html xmlns:esi="http://www.edge-delivery.org/esi/1.0">
-foo<esi:include src="/bar" />baz
+  foo<esi:include src="/bar" />baz
 </html>
 ```
 
@@ -224,10 +224,10 @@ this declaration, the document model used by `EsiTransformStream` is initialized
 declaration.
 
 If you'd like to use a different identifier than `'esi'`, provide it as the `esiPrefix` value to the constructor of
-`EsiTransformStream`. This may be useful if you are using multiple this library in conjunction with another library that
+`EsiTransformStream`. This may be useful if you are using this library in conjunction with another library that
 uses the `esi` prefix for its own use.
 
-For example, if you set up your transform stream like this:
+For example, you may set up your transform stream like this:
 ```javascript
 const esiTransformStream = new EsiTransformStream(url, headers, {
   esiPrefix: 'my-esi'
