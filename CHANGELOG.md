@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+- XmlDocument can be constructed with an empty parameter list to default to empty namespaces definitions
+- EsiTransformer now throws if an unknown tag in esi: namespace is seen
+- EsiTransformStream can be constructed with alternate (or no) default namespace prefix
+- ESI Transform pipes unknown XML tags and attributes through
+- refactor: Use 'attr' instead of 'prop' terminology in internal API for XML attributes
+
+### Fixed
+
+- docs: recommend setting `host_override` instead of `host` header
+
 ## [0.1.2] - 2024-01-16
 
 ### Fixed
