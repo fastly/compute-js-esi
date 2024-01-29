@@ -4,7 +4,7 @@
  */
 
 import XmlTransformStream from "./XmlTransformStream.js";
-import EsiTransformer, { EsiIncludeResult } from "./EsiTransformer.js";
+import EsiTransformer, { EsiError, EsiIncludeResult } from "./EsiTransformer.js";
 import { XmlDocument } from "./XmlModel.js";
 import { ValueOrPromise } from "./util.js";
 import { EsiVariables, IEsiVariables } from "./EsiVariables.js";
@@ -13,14 +13,10 @@ export type EsiTransformStreamOptions = {
   vars?: IEsiVariables,
   fetch?: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
   processIncludeResponse?: (esiIncludeResult: EsiIncludeResult) => ValueOrPromise<string>,
+  esiPrefix?: string | null,
 };
 
 export default class EsiTransformStream extends XmlTransformStream {
-  static document = new XmlDocument({
-    // We grant this, in case the HTML tag doesn't have it
-    'esi': EsiTransformer.namespace,
-  });
-
   constructor(
     url: string | URL,
     headers: HeadersInit,
@@ -53,8 +49,23 @@ export default class EsiTransformStream extends XmlTransformStream {
       depth,
     );
 
+    const esiPrefix = options?.esiPrefix;
+    const namespaceDefs: Record<string, string> = {};
+    if (esiPrefix === null) {
+      // We create a document with no namespace definitions
+    } else {
+      if (esiPrefix != null && !/^[a-zA-Z][-a-zA-Z0-9]*$/.test(esiPrefix)) {
+        throw new EsiError(`ESI namespace prefix '${esiPrefix}' is not a valid identifier.`);
+      }
+      // If esiPrefix is undefined, we use the default of 'esi'.
+      namespaceDefs[esiPrefix ?? 'esi'] = EsiTransformer.namespace;
+    }
+    const document = new XmlDocument(namespaceDefs);
+
     // We ignore default (non-namespaced) tags. Only ESI and other namespaced tags
     // are expected to follow XML rules.
-    super(EsiTransformStream.document, esiTransformer, true);
+    const ignoreDefaultTags = true;
+
+    super(document, esiTransformer, ignoreDefaultTags);
   }
 }

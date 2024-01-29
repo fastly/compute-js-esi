@@ -114,6 +114,13 @@ In most cases, the only value you need to pass for `options` is `fetch` &mdash; 
     > If this is not specified, or if this returns `null` or a `Promise` that resolves to `null`, then
     the default behavior is to throw an `EsiIncludeError` error.
 
+  * `esiPrefix` (optional, advanced)
+
+    A string value or `null`, used to specify a default XML prefix identifier to interpret as an ESI tag.
+
+    > The default value is `'esi'` for convenience. If you wish to suppress this functionality altogether,
+    set this value to `null`. See [XML Namespacing](#xml-namespacing) below for details.
+
 ## Notes
 
 ### Supported tags
@@ -183,6 +190,87 @@ This library currently does not impose limits on the number or depth of esi:incl
 during a single request, but as esi:include tags will cause a backend request,
 [they are subject to constraints](https://developer.fastly.com/learning/compute/#limitations-and-constraints)
 at the platform level.
+
+### XML tags in HTML
+
+ESI tags are [defined as an XML-based language](https://www.w3.org/TR/esi-lang/). This means they must follow
+all the strict rules of XML, such as attribute quoting and matching closing tags.  However, because this library is
+designed to work in an HTML context, it only processes and enforces these rules for non-default tags (only if
+they appear in an XML namespace). All non-namespaced HTML tags, as well as their attributes and content, are
+ignored by the transformation and passed straight through to the output stream.
+
+Non-default tags not recognized by this library (i.e., those that belong to other namespaces) are checked for conformity
+with XML rules but are passed through to the output without any processing.
+
+### XML Namespacing
+
+This is advanced information provided for completeness.
+
+ESI tags are defined as XML tags that live in the `http://www.edge-delivery.org/esi/1.0` namespace.
+This means that formally, the namespace needs to be declared in the tag itself or in any parent tag, e.g.:
+
+```html
+foo<esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0"/>baz
+```
+or
+```html
+<html xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+foo<esi:include src="/bar" />baz
+</html>
+```
+
+However, because this library is designed to be usable as a drop-in replacement for contexts that don't require
+this declaration, the document model used by `EsiTransformStream` is initialized by default to declare this namespace
+declaration.
+
+If you'd like to use a different identifier than `'esi'`, provide it as the `esiPrefix` value to the constructor of
+`EsiTransformStream`. This may be useful if you are using multiple this library in conjunction with another library that
+uses the `esi` prefix for its own use.
+
+For example, if you set up your transform stream like this:
+```javascript
+const esiTransformStream = new EsiTransformStream(url, headers, {
+  esiPrefix: 'my-esi'
+});
+```
+
+Then, if you have a document like this, its various tags will be handled as described:
+```html
+<!-- EsiTransformStream knows about my-esi, so this is treated as an ESI include -->
+<my-esi:include src="/foo" />
+<!-- EsiTransform does not know about esi, so this is not handled -->  
+<esi:include src="/bar" />
+<!-- Attribute on the tag explicitly sets namespace, so this is treated as an ESI include -->
+<esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0" />
+```
+
+If you wish to disable to feature altogether, it's also possible to set the value to `null`:
+```javascript
+const esiTransformStream = new EsiTransformStream(url, headers, {
+  esiPrefix: null
+});
+```
+
+Note that if you do this, then `EsiTransformStream` will not know about any ESI namespaces,
+so you will need to specify the namespace in your document.
+
+* IMPORTANT: If you use this feature, keep in mind that this library does not (currently) process default tags (such
+as HTML tags). Unfortunately, this also includes XML namespace attributes on such tags. If you use this feature, be sure
+to put the `xmlns` declaration on the ESI tag itself. 
+
+  For example, at the moment, the following `xmlns:esi` attribute will not be acknowledged:
+  ```html
+  <html xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+    <esi:include src="/foo" /> <!-- Won't be recognized! -->
+  </html>
+  ```
+
+  Instead, do this:
+  ```html
+  <html>
+    <esi:include src="/foo" xmlns:esi="http://www.edge-delivery.org/esi/1.0" /> <!-- Works! -->
+  </html>
+  ```
 
 ## Issues
 
