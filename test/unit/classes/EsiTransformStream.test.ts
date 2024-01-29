@@ -108,13 +108,10 @@ describe('EsiTransformStream', () => {
       stream.body.pipeThrough(esiTransformStream)
     );
 
-    await assert.rejects(async () => {
-      await transformed.text();
-    }, (err) => {
-      assert.ok(err instanceof Error);
-      assert.strictEqual(err.message, `Unknown namespace prefix 'esi'`);
-      return true;
-    });
+    const transformedText = await transformed.text();
+
+    // Ignores the 'unknown' ESI tag and pipes it through
+    assert.strictEqual(transformedText, 'foo<esi:include src="/bar" />baz');
 
   });
 
@@ -225,13 +222,35 @@ describe('EsiTransformStream', () => {
       stream.body.pipeThrough(esiTransformStream)
     );
 
-    await assert.rejects(async () => {
-      await transformed.text();
-    }, (err) => {
-      assert.ok(err instanceof Error);
-      assert.strictEqual(err.message, `Unknown namespace prefix 'esi'`);
-      return true;
-    });
+    const transformedText = await transformed.text();
+
+    // Ignores the 'unknown' ESI tag and pipes it through
+    assert.strictEqual(transformedText, 'foo<esi:include src="/bar" />baz');
+
+  });
+
+  it('passes through unknown XML tags and props', async () => {
+
+    const stream = new Response(
+      'hoge<foo:bar hi:ho="hello" /><foo:baz x:test="yes">Yes</foo:baz>piyo'
+    );
+
+    const esiTransformStream = new EsiTransformStream(
+      'http://www.example.com/',
+      {},
+      {
+        esiPrefix: null,
+      }
+    );
+
+    assert.ok(stream.body != null);
+    const transformed = new Response(
+      stream.body.pipeThrough(esiTransformStream)
+    );
+
+    const transformedText = await transformed.text();
+
+    assert.strictEqual(transformedText, 'hoge<foo:bar hi:ho="hello" /><foo:baz x:test="yes">Yes</foo:baz>piyo');
 
   });
 

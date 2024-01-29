@@ -60,7 +60,7 @@ export default class EsiTransformStream extends XmlTransformStream {
       // If esiPrefix is undefined, we use the default of 'esi'.
       namespaceDefs[esiPrefix ?? 'esi'] = EsiTransformer.namespace;
     }
-    const document = new XmlDocument(namespaceDefs);
+    const document = new XmlDocument(namespaceDefs, true);
 
     // We ignore default (non-namespaced) tags. Only ESI and other namespaced tags
     // are expected to follow XML rules.
