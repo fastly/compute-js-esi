@@ -68,7 +68,7 @@ describe('EsiTransformer', () => {
 
     });
 
-    it('passes unknown XML tags directly through', async () => {
+    it('passes unknown XML tags and props directly through', async () => {
 
       const url = new URL('https://www.example.com/foo?bar=baz');
       const esiTransformer = new EsiTransformer(url);
@@ -78,7 +78,7 @@ describe('EsiTransformer', () => {
       const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
         'asdf',
         new XmlElement(document, 'foo:hoge', null, [
-          new XmlElement(document, 'div', null, [ 'hi' ]),
+          new XmlElement(document, 'div', { 'xmlns:bar': 'nsbar', 'bar:piyo': '1' }, [ 'hi' ]),
           new XmlElement(document, 'div', null, [ 'ho' ]),
         ]),
         'jkl;'
@@ -104,6 +104,7 @@ describe('EsiTransformer', () => {
       assert.strictEqual(result.children[1].children[0].namespace, 'nshtml');
       assert.strictEqual(result.children[1].children[0].children.length, 1);
       assert.strictEqual(result.children[1].children[0].children[0], 'hi');
+      assert.strictEqual(result.children[1].children[0].props['nsbar|piyo'].value, '1');
       assert.ok(result.children[1].children[1] instanceof XmlElement);
       assert.strictEqual(result.children[1].children[1].localFullname, 'div');
       assert.strictEqual(result.children[1].children[1].namespace, 'nshtml');
