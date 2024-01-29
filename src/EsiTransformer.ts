@@ -351,6 +351,8 @@ export default class EsiTransformer implements IXmlTransformer {
         if (el.localName === 'otherwise') {
           throw new EsiStructureError(el, 'esi:otherwise must be direct child of esi:choose');
         }
+
+        throw new EsiStructureError(el, 'Unknown esi tag esi:' + el.localName);
       }
     });
 

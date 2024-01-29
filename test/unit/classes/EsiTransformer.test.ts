@@ -1200,6 +1200,34 @@ describe('EsiTransformer', () => {
 
     });
 
+    it('Throws when encountering unknown ESI tag', async () => {
+
+      const url = new URL('https://www.example.com/foo?bar=baz');
+      const esiTransformer = new EsiTransformer(url);
+
+      const document = new XmlDocument();
+
+      const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
+        'asdf',
+        new XmlElement(document, 'esi:hoge', null, [
+          new XmlElement(document, 'div', null, [ 'hi' ]),
+          new XmlElement(document, 'div', null, [ 'ho' ]),
+        ]),
+        'jkl;'
+      ]);
+
+      html.applyNamespaces();
+
+      await assert.rejects(async () => {
+        await esiTransformer.transformElementNode(html);
+      }, (err) => {
+        assert.ok(err instanceof EsiStructureError);
+        assert.strictEqual(err.message, 'Unknown esi tag esi:hoge');
+        assert.strictEqual(err.el, html.children[1]);
+        return true;
+      });
+    });
+
   });
 
   describe('EsiTransformer#xmlStreamerBeforeProcess', () => {
