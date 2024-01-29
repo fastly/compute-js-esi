@@ -20,11 +20,14 @@ export type XmlProp = {
 
 export class XmlDocument {
   constructor(
-    namespaceDefs?: { [prefix: string]: string } | null
+    namespaceDefs?: { [prefix: string]: string } | null,
+    allowUnknownNamespacePrefixes?: boolean,
   ) {
     this.namespaceDefs = namespaceDefs ?? {};
+    this.allowUnknownNamespacePrefixes = allowUnknownNamespacePrefixes ?? false;
   }
   namespaceDefs: { [prefix: string]: string };
+  allowUnknownNamespacePrefixes: boolean;
 }
 
 export class XmlElement {
@@ -109,6 +112,9 @@ export class XmlElement {
     }
     const documentNamespace = this.document.namespaceDefs[prefix ?? ''];
     if (documentNamespace == null) {
+      if (this.document.allowUnknownNamespacePrefixes) {
+        return '';
+      }
       throw new Error(`Unknown namespace prefix '${prefix ?? ''}'`);
     }
     return documentNamespace;

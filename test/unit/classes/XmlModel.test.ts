@@ -31,6 +31,16 @@ describe('XmlModel', () => {
     assert.deepStrictEqual(documentNullDefs.namespaceDefs, documentEmptyDefs.namespaceDefs);
   });
 
+  it('can be constructed with "allow unknown namespace prefixes" parameter, defaults to false', () => {
+    const documentNoAllowUnknownNamespacePrefixes = new XmlDocument();
+    const documentAllowUnknownNamespacePrefixesTrue = new XmlDocument(null, true);
+    const documentAllowUnknownNamespacePrefixesFalse = new XmlDocument(null, false);
+
+    assert.deepStrictEqual(false, documentNoAllowUnknownNamespacePrefixes.allowUnknownNamespacePrefixes);
+    assert.deepStrictEqual(true, documentAllowUnknownNamespacePrefixesTrue.allowUnknownNamespacePrefixes);
+    assert.deepStrictEqual(false, documentAllowUnknownNamespacePrefixesFalse.allowUnknownNamespacePrefixes);
+  });
+
   it('Can express XML model with default namespace', () => {
 
     // <html xmlns="nshtml" xmlns:foo="nsfoo">
@@ -104,7 +114,7 @@ describe('XmlModel', () => {
 
   });
 
-  it('Dies when it encounters unknown namespace', () => {
+  it('Dies when it encounters unknown namespace allowUnknownNamespacePrefixes is not specified', () => {
 
     // assume root with xmlns:abc="nsabc"
     // <abc:foo>
@@ -123,6 +133,29 @@ describe('XmlModel', () => {
     assert.throws(() => {
       model.applyNamespaces();
     });
+
+  });
+
+  it('Does not die when it encounters unknown namespace when allowUnknownNamespacePrefixes is specified', () => {
+
+    // assume root with xmlns:abc="nsabc"
+    // <abc:foo>
+    //   <def:bar />
+    // </abc:foo>
+
+    const document = new XmlDocument({
+      'abc': 'nsabc',
+    }, true);
+
+    const model = new XmlElement(document, 'abc:foo', { 'hoge': 'piyo' }, [
+      new XmlElement(document, 'def:bar'),
+      'text'
+    ]);
+
+    model.applyNamespaces();
+
+    assert.ok(model.children[0] instanceof XmlElement);
+    assert.strictEqual(model.children[0].namespace, '');
 
   });
 
