@@ -5,13 +5,11 @@
 
 // A lightweight representation of XML Elements.
 // Not as heavy as @xmldom/xmldom.
-// Attributes are stored as "props", similar to how they are handled
-// in React.
 
 import { xmlEncode } from "./xmlUtils.js";
 import { ValueOrPromise } from "./util.js";
 
-export type XmlProp = {
+export type XmlAttr = {
   localName: string;
   namespace: string | null | undefined;
   localNamespacePrefix: string | null;
@@ -35,22 +33,22 @@ export class XmlElement {
   constructor(
     document: XmlDocument,
     name: string,
-    props: { [fullname: string]: string } | null = null,
+    attrs: { [fullname: string]: string } | null = null,
     children: XmlElementNode[] | null = null,
   ) {
     this.document = document;
     this.parent = null;
 
     this.namespaceDefs = {};
-    this.props = {};
-    if (props != null) {
-      for (const [key, value] of Object.entries(props)) {
+    this.attrs = {};
+    if (attrs != null) {
+      for (const [key, value] of Object.entries(attrs)) {
         if (key === 'xmlns') {
           this.namespaceDefs[''] = value;
         } else if (key.startsWith('xmlns:')) {
           this.namespaceDefs[key.slice(6)] = value;
         } else {
-          this.addProp(key, value, false);
+          this.addAttr(key, value, false);
         }
       }
     }
@@ -81,7 +79,7 @@ export class XmlElement {
 
   namespaceDefs: { [prefix: string]: string };
 
-  props: { [fullname: string]: XmlProp };
+  attrs: { [fullname: string]: XmlAttr };
   children: XmlElementNode[];
 
   applyNamespaces() {
@@ -93,11 +91,11 @@ export class XmlElement {
     if (this.namespace === undefined) {
       this.namespace = this.lookupNamespace(this.localNamespacePrefix);
     }
-    for (const [key, xmlProp] of Object.entries(this.props)) {
-      if (xmlProp.namespace === undefined) {
-        delete this.props[key];
-        xmlProp.namespace = xmlProp.localNamespacePrefix != null ? this.lookupNamespace(xmlProp.localNamespacePrefix) : null;
-        this.props[(xmlProp.namespace ?? '') + '|' + xmlProp.localName] = xmlProp;
+    for (const [key, xmlAttr] of Object.entries(this.attrs)) {
+      if (xmlAttr.namespace === undefined) {
+        delete this.attrs[key];
+        xmlAttr.namespace = xmlAttr.localNamespacePrefix != null ? this.lookupNamespace(xmlAttr.localNamespacePrefix) : null;
+        this.attrs[(xmlAttr.namespace ?? '') + '|' + xmlAttr.localName] = xmlAttr;
       }
     }
   }
@@ -131,7 +129,7 @@ export class XmlElement {
     return [ prefix, localName ];
   }
 
-  addProp(key: string, value: string, resolveNamespace: boolean) {
+  addAttr(key: string, value: string, resolveNamespace: boolean) {
 
     const [localNamespacePrefix, localName] = this.parseName(key);
 
@@ -142,7 +140,7 @@ export class XmlElement {
       namespace = this.lookupNamespace(localNamespacePrefix);
     }
 
-    const xmlProp: XmlProp = {
+    const xmlAttr: XmlAttr = {
       localName,
       localNamespacePrefix,
       namespace,
@@ -150,11 +148,11 @@ export class XmlElement {
     }
 
     if (namespace === null) {
-      this.props[localName] = xmlProp;
+      this.attrs[localName] = xmlAttr;
     } else if (resolveNamespace) {
-      this.props[namespace + '|' + localName] = xmlProp;
+      this.attrs[namespace + '|' + localName] = xmlAttr;
     } else {
-      this.props[localNamespacePrefix + ':' + localName] = xmlProp;
+      this.attrs[localNamespacePrefix + ':' + localName] = xmlAttr;
     }
 
   }
@@ -162,12 +160,12 @@ export class XmlElement {
   get tagOpen() {
     return '<' +
       this.localFullname +
-      Object.values(this.props)
-        .map(xmlProp => {
+      Object.values(this.attrs)
+        .map(xmlAttr => {
           return ' ' +
-            (xmlProp.localNamespacePrefix != null ? xmlProp.localNamespacePrefix + ':' : '') +
-            xmlProp.localName +
-            '="' + xmlEncode(xmlProp.value) + '"'
+            (xmlAttr.localNamespacePrefix != null ? xmlAttr.localNamespacePrefix + ':' : '') +
+            xmlAttr.localName +
+            '="' + xmlEncode(xmlAttr.value) + '"'
         })
         .join('') +
       Object.entries(this.namespaceDefs)

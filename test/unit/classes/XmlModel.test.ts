@@ -67,19 +67,19 @@ describe('XmlModel', () => {
     assert.strictEqual(div.localNamespacePrefix, null);
     assert.strictEqual(div.localName, 'div');
 
-    const classProp = div.props['class'];
-    assert.ok(classProp != null);
-    assert.strictEqual(classProp.namespace, null);
-    assert.strictEqual(classProp.localName, 'class');
-    assert.strictEqual(classProp.localNamespacePrefix, null);
-    assert.strictEqual(classProp.value, 'foo');
+    const classAttr = div.attrs['class'];
+    assert.ok(classAttr != null);
+    assert.strictEqual(classAttr.namespace, null);
+    assert.strictEqual(classAttr.localName, 'class');
+    assert.strictEqual(classAttr.localNamespacePrefix, null);
+    assert.strictEqual(classAttr.value, 'foo');
 
-    const fooCustomProp = div.props['nsfoo|custom'];
-    assert.ok(fooCustomProp != null);
-    assert.strictEqual(fooCustomProp.namespace, 'nsfoo');
-    assert.strictEqual(fooCustomProp.localName, 'custom');
-    assert.strictEqual(fooCustomProp.localNamespacePrefix, 'foo');
-    assert.strictEqual(fooCustomProp.value, 'yay');
+    const fooCustomAttr = div.attrs['nsfoo|custom'];
+    assert.ok(fooCustomAttr != null);
+    assert.strictEqual(fooCustomAttr.namespace, 'nsfoo');
+    assert.strictEqual(fooCustomAttr.localName, 'custom');
+    assert.strictEqual(fooCustomAttr.localNamespacePrefix, 'foo');
+    assert.strictEqual(fooCustomAttr.value, 'yay');
 
     const hoge = html.children[1];
     assert.ok(hoge instanceof XmlElement);
@@ -402,7 +402,7 @@ describe('XmlModel', () => {
           if (el.namespace === 'nsfoo' && el.localName === 'pick') {
 
             // Replace in-place
-            const value = parseInt(el.props['value'].value, 10);
+            const value = parseInt(el.attrs['value'].value, 10);
 
             const children = el.children
               .filter(x => x instanceof XmlElement);

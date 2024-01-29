@@ -155,8 +155,8 @@ export default class EsiTransformer implements IXmlTransformer {
 
           const srcs: string[] = [];
 
-          const src = applyEsiVariables(el.props['src'].value, this.options.vars);
-          const alt = applyEsiVariables(el.props['alt']?.value, this.options.vars);
+          const src = applyEsiVariables(el.attrs['src'].value, this.options.vars);
+          const alt = applyEsiVariables(el.attrs['alt']?.value, this.options.vars);
 
           if (src != null) {
             srcs.push(src);
@@ -204,7 +204,7 @@ export default class EsiTransformer implements IXmlTransformer {
               }
             }
 
-            const swallowErrors = applyEsiVariables(el.props['onerror']?.value, this.options.vars) === 'continue';
+            const swallowErrors = applyEsiVariables(el.attrs['onerror']?.value, this.options.vars) === 'continue';
 
             if (swallowErrors) {
               // Swallow and remove node entirely
@@ -307,7 +307,7 @@ export default class EsiTransformer implements IXmlTransformer {
             throw new EsiStructureError(el, 'esi:choose must have at least one esi:when as direct child');
           }
 
-          if (whenTags.some(whenTag => whenTag.props['test'] == null)) {
+          if (whenTags.some(whenTag => whenTag.attrs['test'] == null)) {
             throw new EsiStructureError(el, 'esi:when tags are required to have a test attribute.');
           }
 
@@ -326,7 +326,7 @@ export default class EsiTransformer implements IXmlTransformer {
 
           let activeBranch: XmlElement | null = null;
           for (const whenTag of whenTags) {
-            if (this.expressionEvaluator.evaluate(whenTag.props['test'].value)) {
+            if (this.expressionEvaluator.evaluate(whenTag.attrs['test'].value)) {
               activeBranch = whenTag;
               break;
             }

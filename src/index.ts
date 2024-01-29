@@ -14,7 +14,7 @@ export { default as EsiTransformStream } from './EsiTransformStream.js';
 export { default as StreamerState } from './StreamerState.js';
 export { ValueOrPromise } from './util.js';
 export {
-  XmlProp,
+  XmlAttr,
   XmlDocument,
   XmlElement,
   XmlElementNode,

@@ -229,7 +229,7 @@ describe('EsiTransformStream', () => {
 
   });
 
-  it('passes through unknown XML tags and props', async () => {
+  it('passes through unknown XML tags and attrs', async () => {
 
     const stream = new Response(
       'hoge<foo:bar hi:ho="hello" /><foo:baz x:test="yes">Yes</foo:baz>piyo'

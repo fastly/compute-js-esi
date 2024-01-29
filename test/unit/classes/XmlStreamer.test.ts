@@ -190,13 +190,13 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(ctx.children[0].localNamespacePrefix, null);
     assert.strictEqual(ctx.children[0].namespace, 'nshtml');
 
-    assert.strictEqual(Object.entries(ctx.children[0].props).length, 1);
+    assert.strictEqual(Object.entries(ctx.children[0].attrs).length, 1);
 
-    const langProp = ctx.children[0].props['lang'];
-    assert.ok(langProp != null)
-    assert.strictEqual(langProp.namespace, null);
-    assert.strictEqual(langProp.localNamespacePrefix, null);
-    assert.strictEqual(langProp.localName, 'lang');
+    const langAttr = ctx.children[0].attrs['lang'];
+    assert.ok(langAttr != null)
+    assert.strictEqual(langAttr.namespace, null);
+    assert.strictEqual(langAttr.localNamespacePrefix, null);
+    assert.strictEqual(langAttr.localName, 'lang');
 
     assert.strictEqual(ctx.children[0].children.length, 0);
 
@@ -222,7 +222,7 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(ctx.children[1].localNamespacePrefix, 'foo');
     assert.strictEqual(ctx.children[1].namespace, 'nsfoo');
 
-    assert.strictEqual(Object.entries(ctx.children[1].props).length, 0);
+    assert.strictEqual(Object.entries(ctx.children[1].attrs).length, 0);
 
     assert.strictEqual(ctx.children[1].children.length, 1);
     assert.strictEqual(ctx.children[1].children[0], 'boo');
@@ -253,7 +253,7 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(ctx.children[1].localNamespacePrefix, 'foo');
     assert.strictEqual(ctx.children[1].namespace, 'nsfoo');
 
-    assert.strictEqual(Object.entries(ctx.children[1].props).length, 0);
+    assert.strictEqual(Object.entries(ctx.children[1].attrs).length, 0);
 
     assert.strictEqual(ctx.children[1].children.length, 1);
     assert.strictEqual(ctx.children[1].children[0], 'b');
@@ -275,7 +275,7 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(ctx.children[1].localNamespacePrefix, 'foo');
     assert.strictEqual(ctx.children[1].namespace, 'nsfoo');
 
-    assert.strictEqual(Object.entries(ctx.children[1].props).length, 0);
+    assert.strictEqual(Object.entries(ctx.children[1].attrs).length, 0);
 
     assert.strictEqual(ctx.children[1].children.length, 1);
     assert.strictEqual(ctx.children[1].children[0], 'boo');
@@ -341,19 +341,19 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(ctx.children[1].localName, 'foo');
     assert.strictEqual(ctx.children[1].localFullname, 'abc:foo');
 
-    assert.strictEqual(Object.entries(ctx.children[1].props).length, 2);
+    assert.strictEqual(Object.entries(ctx.children[1].attrs).length, 2);
 
-    const helloProp = ctx.children[1].props['nsabc|hello'];
-    assert.strictEqual(helloProp.localName, 'hello');
-    assert.strictEqual(helloProp.localNamespacePrefix, 'abc');
-    assert.strictEqual(helloProp.namespace, 'nsabc');
-    assert.strictEqual(helloProp.value, 'yes');
+    const helloAttr = ctx.children[1].attrs['nsabc|hello'];
+    assert.strictEqual(helloAttr.localName, 'hello');
+    assert.strictEqual(helloAttr.localNamespacePrefix, 'abc');
+    assert.strictEqual(helloAttr.namespace, 'nsabc');
+    assert.strictEqual(helloAttr.value, 'yes');
 
-    const hiProp = ctx.children[1].props['hi'];
-    assert.strictEqual(hiProp.localName, 'hi');
-    assert.strictEqual(hiProp.localNamespacePrefix, null);
-    assert.strictEqual(hiProp.namespace, null);
-    assert.strictEqual(hiProp.value, 'ho');
+    const hiAttr = ctx.children[1].attrs['hi'];
+    assert.strictEqual(hiAttr.localName, 'hi');
+    assert.strictEqual(hiAttr.localNamespacePrefix, null);
+    assert.strictEqual(hiAttr.namespace, null);
+    assert.strictEqual(hiAttr.value, 'ho');
 
     assert.strictEqual(ctx.children[1].children.length, 1);
     assert.strictEqual(ctx.children[1].children[0], `1<div />2`);
@@ -392,19 +392,19 @@ describe('XmlStreamerContext', () => {
     assert.strictEqual(div.localNamespacePrefix, null);
     assert.strictEqual(div.localName, 'div');
 
-    const classProp = div.props['class'];
-    assert.ok(classProp != null);
-    assert.strictEqual(classProp.namespace, null);
-    assert.strictEqual(classProp.localName, 'class');
-    assert.strictEqual(classProp.localNamespacePrefix, null);
-    assert.strictEqual(classProp.value, 'foo');
+    const classAttr = div.attrs['class'];
+    assert.ok(classAttr != null);
+    assert.strictEqual(classAttr.namespace, null);
+    assert.strictEqual(classAttr.localName, 'class');
+    assert.strictEqual(classAttr.localNamespacePrefix, null);
+    assert.strictEqual(classAttr.value, 'foo');
 
-    const fooCustomProp = div.props['nsfoo|custom'];
-    assert.ok(fooCustomProp != null);
-    assert.strictEqual(fooCustomProp.namespace, 'nsfoo');
-    assert.strictEqual(fooCustomProp.localName, 'custom');
-    assert.strictEqual(fooCustomProp.localNamespacePrefix, 'foo');
-    assert.strictEqual(fooCustomProp.value, 'yay');
+    const fooCustomAttr = div.attrs['nsfoo|custom'];
+    assert.ok(fooCustomAttr != null);
+    assert.strictEqual(fooCustomAttr.namespace, 'nsfoo');
+    assert.strictEqual(fooCustomAttr.localName, 'custom');
+    assert.strictEqual(fooCustomAttr.localNamespacePrefix, 'foo');
+    assert.strictEqual(fooCustomAttr.value, 'yay');
 
     const hoge = html.children[3];
     assert.ok(hoge instanceof XmlElement);

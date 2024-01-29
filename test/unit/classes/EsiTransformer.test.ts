@@ -68,7 +68,7 @@ describe('EsiTransformer', () => {
 
     });
 
-    it('passes unknown XML tags and props directly through', async () => {
+    it('passes unknown XML tags and attrs directly through', async () => {
 
       const url = new URL('https://www.example.com/foo?bar=baz');
       const esiTransformer = new EsiTransformer(url);
@@ -104,7 +104,7 @@ describe('EsiTransformer', () => {
       assert.strictEqual(result.children[1].children[0].namespace, 'nshtml');
       assert.strictEqual(result.children[1].children[0].children.length, 1);
       assert.strictEqual(result.children[1].children[0].children[0], 'hi');
-      assert.strictEqual(result.children[1].children[0].props['nsbar|piyo'].value, '1');
+      assert.strictEqual(result.children[1].children[0].attrs['nsbar|piyo'].value, '1');
       assert.ok(result.children[1].children[1] instanceof XmlElement);
       assert.strictEqual(result.children[1].children[1].localFullname, 'div');
       assert.strictEqual(result.children[1].children[1].namespace, 'nshtml');
@@ -372,7 +372,7 @@ describe('EsiTransformer', () => {
         }
 
         function handleIncludeError(event: HandleIncludeErrorEvent) {
-          const src = event.el.props['src'].value;
+          const src = event.el.attrs['src'].value;
           if (src === '/templates/header.html') {
             event.customErrorString = 'header';
           }
