@@ -73,7 +73,7 @@ describe('EsiTransformer', () => {
       const url = new URL('https://www.example.com/foo?bar=baz');
       const esiTransformer = new EsiTransformer(url);
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
 
       const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
         'asdf',
@@ -121,7 +121,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url);
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -152,7 +152,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url);
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -195,7 +195,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -240,7 +240,7 @@ describe('EsiTransformer', () => {
         };
         const esiTransformer = new EsiTransformer(url, undefined, { fetch, vars });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -277,7 +277,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -309,7 +309,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -340,7 +340,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -380,7 +380,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch, handleIncludeError });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -407,7 +407,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch, handleIncludeError });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           'asdf',
@@ -449,7 +449,7 @@ describe('EsiTransformer', () => {
         const url = new URL('https://www.example.com/foo?bar=baz');
         const esiTransformer = new EsiTransformer(url, undefined, { fetch, processIncludeResponse });
 
-        const document = new XmlDocument(null);
+        const document = new XmlDocument();
 
         const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
           new XmlElement(document, 'esi:include', { 'src': '/templates/header.html' }),
@@ -475,7 +475,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url);
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html1 = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             'asdf',
@@ -531,7 +531,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url);
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html1 = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             'asdf',
@@ -590,7 +590,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url);
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             new XmlElement(document, 'esi:attempt'),
@@ -619,7 +619,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url);
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             new XmlElement(document, 'esi:except'),
@@ -661,7 +661,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             'asdf',
@@ -709,7 +709,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             'asdf',
@@ -751,7 +751,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           const esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-          const document = new XmlDocument(null);
+          const document = new XmlDocument();
 
           const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:esi': 'http://www.edge-delivery.org/esi/1.0' }, [
             'asdf',
@@ -805,7 +805,7 @@ describe('EsiTransformer', () => {
           const url = new URL('https://www.example.com/foo?bar=baz');
           esiTransformer = new EsiTransformer(url, undefined, { fetch });
 
-          document = new XmlDocument(null);
+          document = new XmlDocument();
         });
 
         it('works when outer except is not triggered', async() => {
@@ -888,7 +888,7 @@ describe('EsiTransformer', () => {
 
     describe('esi:vars', () => {
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
       const url = new URL('https://www.example.com/foo?bar=baz');
       const vars: IEsiVariables = {
         getValue(name: string, subKey: string | null): string | undefined {
@@ -947,7 +947,7 @@ describe('EsiTransformer', () => {
 
     describe('esi:choose / esi:when / esi:otherwise', () => {
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
       const url = new URL('https://www.example.com/foo?bar=baz');
       const vars: IEsiVariables = {
         getValue(name: string, subKey: string | null): string | undefined {

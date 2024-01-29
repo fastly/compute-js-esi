@@ -20,7 +20,7 @@ export type XmlProp = {
 
 export class XmlDocument {
   constructor(
-    namespaceDefs: { [prefix: string]: string } | null
+    namespaceDefs?: { [prefix: string]: string } | null
   ) {
     this.namespaceDefs = namespaceDefs ?? {};
   }

@@ -17,7 +17,7 @@ describe('XmlTransformStream', () => {
 
   it('Constructs', () => {
 
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async transformElementNode(_: XmlElementNode): Promise<XmlElementNode | null> {
         return null;
@@ -29,7 +29,7 @@ describe('XmlTransformStream', () => {
   });
 
   it('Pipes stuff', async () => {
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
         return xmlElementNode;
@@ -46,7 +46,7 @@ describe('XmlTransformStream', () => {
   });
 
   it('pre-transforms string', async() => {
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async xmlStreamerBeforeProcess(streamerState) {
         streamerState.bufferedString = streamerState.bufferedString.replaceAll('l', 'z');
@@ -66,7 +66,7 @@ describe('XmlTransformStream', () => {
   });
 
   it('combines XML tags', async() => {
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
         return xmlElementNode;
@@ -83,7 +83,7 @@ describe('XmlTransformStream', () => {
   });
 
   it('closes XML tag that is not closed', async() => {
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
         return xmlElementNode;
@@ -100,7 +100,7 @@ describe('XmlTransformStream', () => {
   });
 
   it('rejects streams that are not Uint8Array', async() => {
-    const document = new XmlDocument({});
+    const document = new XmlDocument();
     const transformer: IXmlTransformer = {
       async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
         return xmlElementNode;

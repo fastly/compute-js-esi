@@ -17,6 +17,20 @@ import {
 
 describe('XmlModel', () => {
 
+  it('When constructed with no namespace defs parameter is equivalent to passing in empty object', () => {
+    const documentNoDefs = new XmlDocument();
+    const documentEmptyDefs = new XmlDocument({});
+
+    assert.deepStrictEqual(documentNoDefs.namespaceDefs, documentEmptyDefs.namespaceDefs);
+  });
+
+  it('When constructed with no namespace defs parameter is equivalent to passing in empty object', () => {
+    const documentNullDefs = new XmlDocument(null);
+    const documentEmptyDefs = new XmlDocument({});
+
+    assert.deepStrictEqual(documentNullDefs.namespaceDefs, documentEmptyDefs.namespaceDefs);
+  });
+
   it('Can express XML model with default namespace', () => {
 
     // <html xmlns="nshtml" xmlns:foo="nsfoo">
@@ -24,7 +38,7 @@ describe('XmlModel', () => {
     //   <foo:hoge />
     // </html>
 
-    const document = new XmlDocument(null);
+    const document = new XmlDocument();
 
     const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
       new XmlElement(document, 'div', { 'class': 'foo', 'foo:custom': 'yay' }),
@@ -119,7 +133,7 @@ describe('XmlModel', () => {
     //   <foo:hoge />
     // </html>
 
-    const document = new XmlDocument(null);
+    const document = new XmlDocument();
 
     const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
       new XmlElement(document, 'div', { 'class': 'foo', 'foo:custom': 'yay' }),
@@ -147,7 +161,7 @@ describe('XmlModel', () => {
     //   <foo:hoge />
     // </html>
 
-    const document = new XmlDocument(null);
+    const document = new XmlDocument();
 
     const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
       new XmlElement(document, 'div', { 'class': 'foo', 'foo:custom': 'yay' }),
@@ -178,7 +192,7 @@ describe('XmlModel', () => {
 
     it('can take elements', () => {
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
 
       const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
         new XmlElement(document, 'div', { 'class': 'foo', 'foo:custom': 'yay' }),
@@ -201,7 +215,7 @@ describe('XmlModel', () => {
 
     function buildSampleTree() {
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
 
       return new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
         'hi',
@@ -312,7 +326,7 @@ describe('XmlModel', () => {
       // custom transform will take content of <foo:pick> tags
       // and select only the item at that index described by value
 
-      const document = new XmlDocument(null);
+      const document = new XmlDocument();
 
       const html = new XmlElement(document, 'html', { 'xmlns': 'nshtml', 'xmlns:foo': 'nsfoo' }, [
         new XmlElement(document, 'foo:pick', { 'value': '1' }, [
