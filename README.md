@@ -117,9 +117,10 @@ In most cases, the only value you need to pass for `options` is `fetch` &mdash; 
   * `esiPrefix` (optional, advanced)
 
     A string value or `null`, used to specify a default XML prefix identifier to interpret as an ESI tag.
+    If you wish to suppress this functionality altogether, set this value to `null`.
+    See [Custom Namespace Prefix](#custom-namespace-prefix) below for details.
 
-    > The default value is `'esi'` for convenience. If you wish to suppress this functionality altogether,
-    set this value to `null`. See [XML Namespacing](#xml-namespacing) below for details.
+    > The default value is `'esi'`.
 
 ## Notes
 
@@ -191,41 +192,36 @@ during a single request, but as esi:include tags will cause a backend request,
 [they are subject to constraints](https://developer.fastly.com/learning/compute/#limitations-and-constraints)
 at the platform level.
 
-### XML tags in HTML
-
-ESI tags are [defined as an XML-based language](https://www.w3.org/TR/esi-lang/). This means they must follow
-all the strict rules of XML, such as attribute quoting and matching closing tags.  However, because this library is
-designed to work in an HTML context, it only processes and enforces these rules for non-default tags (only if
-they appear in an XML namespace). All non-namespaced HTML tags, as well as their attributes and content, are
-ignored by the transformation and passed straight through to the output stream.
-
-Non-default tags not recognized by this library (i.e., those that belong to other namespaces) are checked for conformity
-with XML rules but are passed through to the output without any processing.
-
 ### XML Namespacing
 
-This is advanced information provided for completeness.
-
 ESI tags are defined as XML tags that live in the `http://www.edge-delivery.org/esi/1.0` namespace.
-This means that formally, the namespace needs to be declared in the tag itself or in any parent tag, e.g.:
+This means that formally, the namespace needs to be declared on the tag itself or on a parent element, e.g.:
 
 ```html
-foo<esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0"/>baz
+<esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0"/>
 ```
-or
+or:
 ```html
 <html xmlns:esi="http://www.edge-delivery.org/esi/1.0">
-  foo<esi:include src="/bar" />baz
+  <esi:include src="/bar" />
 </html>
 ```
 
-However, because this library is designed to be usable as a drop-in replacement for contexts that don't require
-this declaration, the document model used by `EsiTransformStream` is initialized by default to declare this namespace
-declaration.
+However, implementations of ESI have had a history of not explicitly requiring this declaration. Additionally,
+because of the way we must handle [XML tags in HTML](#xml-tags-in-html), it's not always possible to reliably find the
+parent of an XML tag. For these reasons, this library implies this declaration by default and makes it available
+everywhere.
 
-If you'd like to use a different identifier than `'esi'`, provide it as the `esiPrefix` value to the constructor of
-`EsiTransformStream`. This may be useful if you are using this library in conjunction with another library that
-uses the `esi` prefix for its own use.
+```html
+<!-- Works, because xmlns:esi="http://www.edge-delivery.org/esi/1.0" is available by default. -->
+<esi:include src="/bar" />
+```
+
+### Custom Namespace Prefix
+
+If you'd like to make ESI available under a prefix other than `esi:` instead, provide it as the `esiPrefix` value when
+constructing `EsiTransformStream`. This may be useful if you are using this library in conjunction with other
+processing that uses the `'esi'` prefix for its own use.
 
 For example, you may set up your transform stream like this:
 ```javascript
@@ -244,33 +240,68 @@ Then, if you have a document like this, its various tags will be handled as desc
 <esi:include src="/bar" xmlns:esi="http://www.edge-delivery.org/esi/1.0" />
 ```
 
-If you wish to disable to feature altogether, it's also possible to set the value to `null`:
+If you wish to disable the automatic prefix declaration altogether, it's also possible to set the value to `null`:
 ```javascript
 const esiTransformStream = new EsiTransformStream(url, headers, {
   esiPrefix: null
 });
 ```
 
-Note that if you do this, then `EsiTransformStream` will not know about any ESI namespaces,
-so you will need to specify the namespace in your document.
+> Note: If you do this, then `EsiTransformStream` will not know about any ESI namespaces, so you will need to specify
+> the namespace in your document.
 
-* IMPORTANT: If you use this feature, keep in mind that this library does not (currently) process default tags (such
-as HTML tags). Unfortunately, this also includes XML namespace attributes on such tags. If you use this feature, be sure
-to put the `xmlns` declaration on the ESI tag itself. 
+### XML tags in HTML
 
-  For example, at the moment, the following `xmlns:esi` attribute will not be acknowledged:
-  ```html
-  <html xmlns:esi="http://www.edge-delivery.org/esi/1.0">
-    <esi:include src="/foo" /> <!-- Won't be recognized! -->
-  </html>
-  ```
+ESI tags are [defined as an XML-based language](https://www.w3.org/TR/esi-lang/). This means they must follow
+the rules of XML, such as attribute quoting and matching closing tags.  However, this library is designed to
+work in an HTML context, so it operates in the following way with respect to HTML and XML tags:
 
-  Instead, do this:
-  ```html
-  <html>
-    <esi:include src="/foo" xmlns:esi="http://www.edge-delivery.org/esi/1.0" /> <!-- Works! -->
-  </html>
-  ```
+* HTML and XML tags that appear with the default namespace (no XML prefix) are treated as plain text by the
+  transformation. This includes the opening tag and any attributes, as well as any closing tags.
+
+* Tags that appear with an XML prefix are classified as XML and must meet the rules of XML. Then:
+    * Tags that belong to the ESI namespace are handled and processed by this library.
+    * Tags that belong to other namespaces are passed through without processing.
+
+If the text content of either type of tag contain any nested tags, then they are also processed according to the same
+rules, that is, only tags that appear with an XML prefix are treated as XML.
+
+There are several reasons we do this:
+* HTML employs a looser set of rules. For example, HTML defines tags that do not require closing tags (such as
+  `input`), and tags whose closing tags may be implied (such as `p`). This makes it very challenging to quickly and
+  accurately determine the structure of the HTML document.
+* Some ESI templates are authored with partial HTML elements. For example, a "header" template may contain the
+  opening tag of an HTML element, whose matching closing tag exists in a "footer" template. To be compatible with such
+  scenarios, we do not enforce XML rules on HTML tags.
+
+This has a few additional implications relating to advanced namespace use:
+
+* This library won't find ESI tags from the default namespace, even when it's set as the default namespace.
+  For example, while formally valid, the following won't work in this library:
+
+```html
+<div>
+  <!-- include tag in default namespace will be ignored. -->
+  <include src="/bar" xmlns="http://www.edge-delivery.org/esi/1.0"/>
+</div>
+```
+
+* If you're declaring `xmlns:<prefix>` yourself, that declaration will be ignored if it's placed on a tag
+  from the default namespace. For example, while formally valid, the following won't work in this library:
+
+```html
+<!-- xmlns:esi is ignored because it's on div which is in the default namespace. -->
+<div xmlns:esi="http://www.edge-delivery.org/esi/1.0">
+  <esi:include src="/foo" /> <!-- Won't be recognized! -->
+</div>
+```
+
+In both of the cases above, do this instead:
+```html
+<div>
+  <esi:include src="/foo" xmlns:esi="http://www.edge-delivery.org/esi/1.0" />
+</div>
+```
 
 ## Issues
 
