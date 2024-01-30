@@ -8,8 +8,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 
-import { EsiTransformStream } from "../../../src/index.js";
-import { EsiError } from "../../../src/EsiTransformer.js";
+import { EsiError, EsiIncludeError, EsiTransformStream } from "../../../src/index.js";
 
 describe('EsiTransformStream', () => {
 

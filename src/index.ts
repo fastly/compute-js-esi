@@ -7,6 +7,7 @@
 
 export {
   default as EsiTransformer,
+  EsiError,
   EsiIncludeError,
   EsiTransformerOptions,
 } from './EsiTransformer.js';
