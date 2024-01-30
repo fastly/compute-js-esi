@@ -253,6 +253,45 @@ describe('EsiTransformStream', () => {
 
   });
 
+  it('Depth limit', async() => {
+
+    const esiTransformStream = new EsiTransformStream(
+      'http://www.example.com/',
+      {
+        'host': 'www.example.com',
+      },
+      {
+        async fetch(input) {
+          const url = new URL(input instanceof Request ? input.url : String(input));
+
+          if (url.pathname === '/foo') {
+            const depth = parseInt(url.searchParams.get('depth') ?? '0', 10) + 1;
+            return new Response(`<esi:include src="/foo?depth=${depth}" />`);
+          }
+
+          return new Response(null);
+        }
+      }
+    );
+
+    const stream = new Response(
+      '<esi:include src="/foo" />'
+    );
+
+    assert.ok(stream.body != null);
+    const transformed = new Response(
+      stream.body.pipeThrough(esiTransformStream)
+    );
+
+    await assert.rejects(async () => {
+      await transformed.text();
+    }, (err) => {
+      assert.ok(err instanceof EsiIncludeError);
+      assert.strictEqual(err.message, `Could not include <esi:include src="/foo?depth=10" />`);
+      return true;
+    });
+  });
+
   it('Can stream, using custom fetch', async() => {
 
     const esiTransformStream = new EsiTransformStream(

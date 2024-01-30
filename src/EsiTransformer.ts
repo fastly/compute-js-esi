@@ -76,6 +76,8 @@ export default class EsiTransformer implements IXmlTransformer {
   // noinspection HttpUrlsUsage - this is a public constant
   static namespace = 'http://www.edge-delivery.org/esi/1.0';
 
+  static depthLimit = 10;
+
   url: URL;
   headers: Headers;
   options: EsiTransformerOptions;
@@ -166,27 +168,29 @@ export default class EsiTransformer implements IXmlTransformer {
           }
 
           let esiIncludeResult: EsiIncludeResult | undefined = undefined;
-          for (const src of srcs) {
-            // The URL and headers to use for this include.
-            const url = new URL(src, this.url);
-            const headers = new Headers(this.headers);
+          if (this.depth < EsiTransformer.depthLimit) {
+            for (const src of srcs) {
+              // The URL and headers to use for this include.
+              const url = new URL(src, this.url);
+              const headers = new Headers(this.headers);
 
-            // add host header if host has changed
-            const host = url.host.toLowerCase();
-            if (host !== this.url.host.toLowerCase()) {
-              headers.set('host', host);
-            }
+              // add host header if host has changed
+              const host = url.host.toLowerCase();
+              if (host !== this.url.host.toLowerCase()) {
+                headers.set('host', host);
+              }
 
-            // esi:include is ALWAYS done using the GET verb
-            const init: RequestInit = {
-              method: 'GET',
-              headers,
-            };
+              // esi:include is ALWAYS done using the GET verb
+              const init: RequestInit = {
+                method: 'GET',
+                headers,
+              };
 
-            const res = await (this.options.fetch ?? fetch)(String(url), init);
-            if (res.status >= 200 && res.status < 300) {
-              esiIncludeResult = { url, headers, res };
-              break;
+              const res = await (this.options.fetch ?? fetch)(String(url), init);
+              if (res.status >= 200 && res.status < 300) {
+                esiIncludeResult = { url, headers, res };
+                break;
+              }
             }
           }
 

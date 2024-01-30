@@ -187,10 +187,14 @@ Because this could result in a longer TTFB, it is ideal to handle the errors fro
 
 ### Backend requests
 
-This library currently does not impose limits on the number or depth of esi:include tags that can be processed
-during a single request, but as esi:include tags will cause a backend request,
-[they are subject to constraints](https://developer.fastly.com/learning/compute/#limitations-and-constraints)
+Keep in mind that `esi:include` tags will cause a backend request, so [they are subject to
+constraints](https://developer.fastly.com/learning/compute/#limitations-and-constraints)
 at the platform level.
+
+### Max inclusion depth
+
+The templates that are fetched by `esi:include` tags can recursively include additional `esi:include` tags.
+This library imposes a limit of 10 levels deep, after which an `EsiIncludeError` will be thrown.
 
 ### XML Namespacing
 
