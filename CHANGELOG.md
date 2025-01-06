@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.5] - 2025-01-06
+
+### Added
+
+- Release to npmjs using CI workflow
+
+### Fixed
+
+- Updated dependency versions
+
 ## [0.1.4] - 2024-01-30
 
 ### Added
@@ -49,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial public release
 
-[unreleased]: https://github.com/fastly/compute-js-esi/compare/v0.1.4...HEAD
+[unreleased]: https://github.com/fastly/compute-js-esi/compare/v0.1.5...HEAD
+[0.1.5]: https://github.com/fastly/compute-js-esi/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/fastly/compute-js-esi/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/fastly/compute-js-esi/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/fastly/compute-js-esi/compare/v0.1.1...v0.1.2
