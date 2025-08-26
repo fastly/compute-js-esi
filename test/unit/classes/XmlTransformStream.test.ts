@@ -128,4 +128,50 @@ describe('XmlTransformStream', () => {
       });
   });
 
+  it("preserves UTF-8 multibyte characters split across chunks", async () => {
+    const document = new XmlDocument();
+    const transformer: IXmlTransformer = {
+      async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
+        return xmlElementNode;
+      }
+    };
+    const xmlTransformStream = new XmlTransformStream(document, transformer);
+
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        const encoder = new TextEncoder();
+        controller.enqueue(new Uint8Array([...encoder.encode("ö"), 0xc3]));
+        controller.enqueue(new Uint8Array([0xb6, ...encoder.encode("ö")]));
+        controller.close();
+      },
+    });
+
+    const transformed = stream.pipeThrough(xmlTransformStream);
+    const res = await readableStreamToString(transformed);
+
+    assert.strictEqual(res, "ööö");
+  });
+
+  it("flushes a dangling UTF-8 lead byte at EOF into U+FFFD", async () => {
+    const document = new XmlDocument();
+    const transformer: IXmlTransformer = {
+      async transformElementNode(xmlElementNode: XmlElementNode): Promise<XmlElementNode | null> {
+        return xmlElementNode;
+      }
+    };
+    const xmlTransformStream = new XmlTransformStream(document, transformer);
+
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        const encoder = new TextEncoder();
+        controller.enqueue(new Uint8Array([...encoder.encode("ö"), 0xc3]));
+        controller.close();
+      },
+    });
+
+    const transformed = stream.pipeThrough(xmlTransformStream);
+    const res = await readableStreamToString(transformed);
+
+    assert.strictEqual(res, "ö�");
+  });
 });
