@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.6] - 2025-09-05
+
 ### Fixed
 
 - Correctly handle UTF-8 multibyte characters that span chunks ([#3](https://github.com/fastly/compute-js-esi/pull/3)
