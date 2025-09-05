@@ -55,7 +55,7 @@ export default class XmlTransformStream extends TransformStream<Uint8Array, Uint
           // Guard anyway in case someone uses this TransformStream with an unexpected stream type
           throw new Error('Received non-Uint8Array chunk');
         }
-        let chunkAsString = textDecoder.decode(chunk);
+        let chunkAsString = textDecoder.decode(chunk, { stream: true });
 
         // Whenever a chunk is added, it is added to the currently processing chunk, and an attempt is made to
         // parse it.
@@ -68,6 +68,9 @@ export default class XmlTransformStream extends TransformStream<Uint8Array, Uint
         });
       },
       async flush(controller: TransformStreamDefaultController<Uint8Array>) {
+        // Flush and append any buffered bytes in the decoder (e.g incomplete multibyte chars)
+        xmlStreamerContext.append(textDecoder.decode());
+
         xmlStreamerContext.flush(true);
 
         await dispatchCompleteTopLevelChildren(chunk => {
